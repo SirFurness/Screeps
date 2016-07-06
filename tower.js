@@ -43,15 +43,30 @@ module.exports = {
                                 structure.structureType === STRUCTURE_RAMPART ||
                                 structure.structureType === STRUCTURE_WALL ||
                                 structure.structureType === STRUCTURE_ROAD ||
-                                structure.structureType === STRUCTURE_EXTENSION) && (structure.hits <= 301)
+                                structure.structureType === STRUCTURE_EXTENSION) && (structure.hits <= 301) && (structure.hits < structure.hitsMax)
                         }
                     });
                     if (structuresNeedingRepair.length > 0) {
-                        let structure = _.min(_.groupBy(structuresNeedingRepair, function (o) {
+                        let structure = _.min(structuresNeedingRepair, function (o) {
                             return o.hits;
-                        }));
+                        });
 
                         tower.repair(structure);
+                    }
+                    else if(tower.energy >= tower.energyCapacity * 0.75) {
+                        let structuresNeedingRepair = tower.room.find(FIND_STRUCTURES, {
+                            filter: (structure) => {
+                                return (structure.structureType === STRUCTURE_RAMPART ||
+                                    structure.structureType === STRUCTURE_WALL) && (structure.hits < structure.hitsMax);
+                            }
+                        });
+                        if (structuresNeedingRepair.length > 0 && tower.energy >= (tower.energyCapacity * 0.75)) {
+                            let structure = _.min(structuresNeedingRepair, function (o) {
+                                return o.hits;
+                            });
+
+                            tower.repair(structure);
+                        }
                     }
                 }
             }

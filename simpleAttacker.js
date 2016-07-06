@@ -12,7 +12,7 @@ module.exports = {
             }
             else {
                 if(helper.getOffExits(creep)) {return;}
-
+                //TODO: write the attacking code
             }
         }
     }

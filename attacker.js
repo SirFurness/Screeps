@@ -9,12 +9,19 @@ module.exports = {
 			Memory.neededHealers = 4;
 
 
+			if(creep.memory.attacking && creep.hits < creep.hitsMax/2) {
+				creep.memory.attacking = false;
+			}
+			else if(!creep.memory.attacking && creep.hits == creep.hitsMax) {
+				creep.memory.attacking = true;
+			}
+
 			let amountOfAttackers = _.sum(Game.creeps, (c) => c.memory.role == 'attacker');
 			let amountOfHealers = _.sum(Game.creeps, (c) => c.memory.role == 'healer');
 
 			if(amountOfAttackers + amountOfHealers === Memory.neededAttackers + Memory.neededHealers) {
-				//this will currently make the creep go back, get healed for a seconds and then return, make it so the creep gets fully healed before returning
-				if(creep.hits > creep.hitsMax/2) {
+
+				if(creep.memory.attacking) {
 					if(creep.room.name != Game.flags.attack.room.name) {
 						creep.moveTo(Game.flags.attack);
 					}

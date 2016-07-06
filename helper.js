@@ -222,9 +222,6 @@ module.exports = {
                 creep.moveTo(towers[0], {reusePath: 100});
             }
         }
-        else {
-            this.upgradeController(creep);
-        }
     },
 
     /*
@@ -253,7 +250,7 @@ module.exports = {
     moveToRoom(creep, destRoom) {
 
         if(creep.room.name != destRoom) {
-            creep.moveTo(new RoomPosition(25, 25, destRoom), {reusePath: 20});
+            creep.moveTo(new RoomPosition(25, 25, destRoom), {reusePath: 50});
         }
     },
 

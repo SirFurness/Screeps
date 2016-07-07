@@ -151,6 +151,13 @@ function prioritize(rolePriority) {
 
 		if(amountOfRole == 0) {
 			priority.push(role);
+
+			if(role == 'harvester') {
+				Memory.harvesterEmergency = true;
+			}
+			else {
+				Memory.harvesterEmergency = false;
+			}
             //_.forEach(priority, (c) => console.log(c));
 		}
 		else {
@@ -267,7 +274,9 @@ function updateStructures(structure) {
 //identifying threats
 function identifyThreats(creep) {
 
-    creep.memory.threat = 0;
+	if(creep.pos.inRangeTo(Game.spawns[0], 1)) {
+		creep.memory.threat = 0;
+	}
 
 	if(Game.spawns[0].room.find(FIND_HOSTILE_CREEPS) > 0) {
 		Memory.hostiles = true;

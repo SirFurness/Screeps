@@ -123,7 +123,7 @@ module.exports = {
     findDroppedEnergy: function(creep) {
         let droppedEnergy = creep.room.find(FIND_DROPPED_ENERGY);
 
-        let carriersWithAssignedDroppedEnergy = _.filter(Game.creeps, c => (c.memory.role === 'carrier' || c.memory.role === 'remoteCarrier') && c.memory.source);
+        let carriersWithAssignedDroppedEnergy = _.filter(Game.creeps, c => (c.memory.role === creep.memory.role) && c.memory.source);
 
         var unclaimedSources = droppedEnergy;
         _.forEach(carriersWithAssignedDroppedEnergy, function(c) {
@@ -247,35 +247,20 @@ module.exports = {
      */
 
 
-    moveToRoom(creep, destRoom) {
+    moveToRoom: function(creep, destRoom) {
 
         if(creep.room.name != destRoom) {
             creep.moveTo(new RoomPosition(25, 25, destRoom), {reusePath: 50});
         }
     },
 
-    getOffExits(creep) {
-        let x = creep.pos.x;
-        let y = creep.pos.y;
-        if(creep.pos.x === 0) {
-            x = 1;
-        }
-        else if(creep.pos.x === 49) {
-            x = 48;
+    getOffExits: function(creep) {
+        if(creep.pos.x == 0 || creep.pos.x == 49 || creep.pos.y == 0 || creep.pos.y == 49) {
+            creep.moveTo(new RoomPosition(25, 25, creep.room.name));
+            return true;
         }
 
-        if(creep.pos.y === 0) {
-            y = 1;
-        }
-        else if(creep.pos.y === 49) {
-            y = 48;
-        }
-
-        if(x == creep.pos.x && y == creep.pos.y) {
-            return false;
-        }
-        creep.moveTo(x, y);
-        return true;
+        return false;
 
     }
 };

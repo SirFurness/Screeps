@@ -5,6 +5,8 @@ module.exports = {
     carry: function(creep) {
         //console.log(creep.name);
 
+        Memory.neededCarriers = helper.getDroppedEnergy(creep).length;
+
         if(creep.memory.carrying && creep.carry.energy == 0) {
             creep.memory.carrying = false;
         }

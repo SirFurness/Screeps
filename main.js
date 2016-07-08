@@ -204,7 +204,7 @@ function buildCreep(role) {
 
 	let building = true;
 	while(creepsDefinitions[role].optionalParts && building) {
-		_.forEach(creepsDefinitions[role].requiredParts, bodypart => {
+		_.forEach(creepsDefinitions[role].optionalParts, bodypart => {
 			cost += BODYPART_COST[bodypart];
 			if(cost > maximumCost) {
 				building = false;

@@ -18,7 +18,7 @@ module.exports.loop = function () {
 			delete Memory.creeps[i];
 		}
 	}
-    
+
 	//update the creeps
 
     var last_cpu = Game.cpu.getUsed();

@@ -19,7 +19,7 @@ module.exports = {
                             structure.structureType == STRUCTURE_WALL ||
                             structure.structureType == STRUCTURE_RAMPART
 
-                    })
+                    }
                     let maxStructure = _max(structures, function(o) {
                         return o.hits;
                     });
@@ -29,10 +29,27 @@ module.exports = {
 
                             if(!room) return;
 
+                            let costs = new PathFinder.CostMatrix;
+                            _.forEach(structures, function(structure) {
+                                let value;
+                                (structure.hits < 255) ? value = structure.hits : value = 254;
 
-                        }
+                                costs.set(structure.pos.x, structure.pos.y, value);
+
+                            });
+
+                            return costs;
+
+                        },
+                        maxRooms: 1
                     })
+
+                    creep.memory.path = path.serialize();
+
                 }
+
+                let pos = PathFinder.CostMatrix.deserialize(creep.memory.path).path[0];
+                creep.move(creep.pos.getDirectionTo(pos));
 
             }
         }

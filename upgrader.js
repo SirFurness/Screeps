@@ -7,10 +7,10 @@ module.exports = {
 
         Memory.neededUpgraders = 2;
 
-        if(Memory.harvesterEmergency = true) {
-            harvester.firstHarvester(creep);
-        }
-        else {
+        //if(Memory.harvesterEmergency = true) {
+        //    harvester.firstHarvester(creep);
+        //}
+        //else {
             if (creep.memory.upgrading && creep.carry.energy == 0) {
                 creep.memory.upgrading = false;
             }
@@ -24,6 +24,6 @@ module.exports = {
             else {
                 helper.upgradeController(creep);
             }
-        }
+        //}
     }
 };

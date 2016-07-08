@@ -97,7 +97,7 @@ module.exports = {
                 }
             }
         }
-    
+
     },
 
     claimDroppedEnergy: function(creep) {
@@ -110,7 +110,7 @@ module.exports = {
         let closestSource = creep.pos.findClosestByRange(this.findDroppedEnergy(creep));
         if(!closestSource) return;
         creep.memory.source = closestSource.id;
-    
+
     },
 
     getDroppedEnergy: function(creep) {
@@ -131,7 +131,7 @@ module.exports = {
             _.pull(unclaimedSources, carrierSource);
 
         });
-    
+
         Memory.neededCarriers = unclaimedSources.length;
         Memory.neededCarriers = (Memory.neededCarriers < Memory.neededHarvesters) ? Memory.neededHarvesters : Memory.neededCarriers;
         return unclaimedSources;
@@ -140,13 +140,13 @@ module.exports = {
     pickUpEnergy: function(creep) {
         let source = Game.getObjectById(creep.memory.source);
         if(!source) return;
-    
+
         if(!creep.pos.isNearTo(source)) {
             creep.moveTo(source, {reusePath: 20});
         }
-    
+
         creep.pickup(source);
-    
+
     },
 
     getSpawnEnergy: function(creep) {
@@ -213,13 +213,35 @@ module.exports = {
         }
     },
 
-    giveTowersEnergy: function(creep) {
+    findUnclaimedTowers: function(creep) {
         let towers = creep.room.find(FIND_MY_STRUCTURES, {
-            filter: (structure) => (structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity)
+          filter: (structure) => structure.structureType == STRUCTURE_TOWER
         });
-        if(towers.length > 0) {
-            if (creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(towers[0], {reusePath: 100});
+
+        let creepWithTower = _.filter(Game.creeps, c => (c.memory.role === creep.memory.role) && c.memory.tower);
+
+        var unclaimedTowers = towers;
+        _.forEach(creepWithTower, function(c) {
+            let towerSource = Game.getObjectById(c.memory.tower);
+            _.pull(unclaimedTowers, towerSource);
+
+        });
+
+        return unclaimedTowers;
+
+    },
+
+    giveTowersEnergy: function(creep) {
+        if(!creep.memory.tower) {
+            let closestTower = creep.pos.findClosestByRange(this.findUnclaimedTowers(creep));
+            if(!closestTower) return;
+            creep.memory.tower = closestTower.id;
+        }
+
+        if(creep.memory.tower) {
+            let tower = Game.getObjectById(creep.memory.tower);
+            if (creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(tower, {reusePath: 100});
             }
         }
     },
